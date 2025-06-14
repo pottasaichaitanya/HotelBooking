@@ -12,10 +12,9 @@ import bookingRouter from './routes/bookingRoutes.js';
 connectDB();
 connectCloudinary();
 const app=express();
-app.use(cors());
-
-app.use(express.json());
 app.use(clerkMiddleware());
+app.use(cors());
+app.use(express.json());
 
 app.use('/api/clerk', clerkWebhooks);
 
