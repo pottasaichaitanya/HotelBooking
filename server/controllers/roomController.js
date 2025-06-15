@@ -1,6 +1,7 @@
-import { populate } from "dotenv";
 import Hotel from "../models/hotel.js";
 import Room from "../models/room.js";
+import {v2 as cloudinary} from "cloudinary";
+
 export const createRoom = async (req, res) => {
    try{
     const {roomType,pricePerNight,amenties} = req.body;
@@ -9,7 +10,7 @@ const hotel=await Hotel.findOne({owner:req.auth.userId});
     res.json({success:false,message:"Hotel not found"});
    }
    const uploadImages=req.files.map(async(file)=>{
-    const response=await connectCloudinary.uploader.upload(file.path);
+    const response=await cloudinary.uploader.upload(file.path);
     return response.secure_url;
    })
    const images=await Promise.all(uploadImages);
