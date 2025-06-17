@@ -22,10 +22,11 @@ export const AppProvider = ({ children }) => {
   const [rooms, setRooms] = useState([]);
   const fetchRooms = async () => {
     try {
-      const data = await axios.get('/api/room/');
+      const {data} = await axios.get('/api/room/');
       if (data.success) {
-        console.log("Rooms fetched successfully:", data);
+        console.log("Rooms fetched successfully:", data.rooms);
         setRooms(data.rooms);
+        toast.success("Rooms fetched successfully");
       }
     }
     catch (error) {
@@ -33,10 +34,10 @@ export const AppProvider = ({ children }) => {
     }
   }
   useEffect(() => {
-    if (user) {
+  
       fetchRooms();
-    }
-  }, [user]);
+    
+  }, []);
   const fetchUser = async () => {
     try {
       const token = await getToken();
