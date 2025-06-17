@@ -21,9 +21,10 @@ export const AppProvider = ({ children }) => {
   const[searchedCities,setSearchedCities]=useState([]);
   const fetchUser=async()=>{
     try{
+      const token = await getToken();
     const {data}=await axios.get('/api/user',{
       headers: {
-        Authorization: `Bearer ${getToken()}`
+        Authorization: `Bearer ${token}`
       }
     });
     if(data.success){
