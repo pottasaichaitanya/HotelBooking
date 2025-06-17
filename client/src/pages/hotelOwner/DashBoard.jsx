@@ -1,9 +1,40 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import Title from '../../components/Title'
 import { dashboardDummyData, assets } from '../../assets/assets'
+import { useAppContext } from '../../context/AppContext'
+import toast from 'react-hot-toast'
 const DashBoard = () => {
-    const [dashboarddata, setDashboardData] = useState(dashboardDummyData);
+    const [dashboarddata, setDashboardData] = useState({
+        bookings:[],
+        totalBookings: 0,
+        totalRevenue: 0,
+    });
+    const { axios, getToken,user } = useAppContext();
+    const fetchDashboardData = async () => {
+        try {
+            const { data } = await axios.get('/api/booking/hotel', {
+                headers: {
+                    Authorization: `Bearer ${await getToken()}`
+                }
+            });
+            if (data.success) {
+                setDashboardData(data.dashboardData);
+                toast.success("Dashboard data fetched successfully");
+                console.log("Dashboard data fetched successfully:", data.dashboardData);
+            } else {
+                toast.error(data.message);
+            }
+        } catch (error) {
+            console.error("Error fetching dashboard data:", error);
+            toast.error(error.message);
+        }
+    }
+    useEffect(() => {
+        if(user) {
+            fetchDashboardData();
+        }
+    }, [user]);
     return (
         <div>
             <Title align='left' text='Dashboard' subtitle='Monitor your room listings ,track your bookings and manage your hotel settings in one place.Stay updated with the latest information and insights.' />
